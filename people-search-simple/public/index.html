@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recherche de personnes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <button class="nav-tab active" data-tab="search">Recherche</button>
+    <button class="nav-tab" data-tab="admin">Administration</button>
+  </nav>
+
+  <!-- ===================== ONGLET RECHERCHE ===================== -->
+  <main id="tab-search" class="tab-content">
+    <div class="container">
+      <header>
+        <h1>Recherche de personnes</h1>
+        <p class="subtitle">Combine la barre générale et les filtres détaillés pour affiner tes résultats.</p>
+      </header>
+
+      <div class="search-bar">
+        <input type="text" id="q" placeholder="Recherche libre : Jean Dupont, 1998, Paris 75001..." />
+        <button id="btn-search">Rechercher</button>
+      </div>
+
+      <div class="sections-grid">
+        <details class="section" open>
+          <summary>Identité</summary>
+          <div class="fields">
+            <label>Prénom <input data-filter="prenom" type="text" /></label>
+            <label>Nom <input data-filter="nom" type="text" /></label>
+            <label>Nom de naissance <input data-filter="nom_naissance" type="text" /></label>
+            <label>Nom affiché <input data-filter="nom_affiche" type="text" /></label>
+            <label>Sexe <input data-filter="sexe" type="text" placeholder="H / F" /></label>
+          </div>
+        </details>
+
+        <details class="section">
+          <summary>Naissance</summary>
+          <div class="fields">
+            <label>Année de naissance <input data-filter="annee_naissance" type="text" placeholder="1998" /></label>
+            <label>Après l'année <input data-filter="annee_min" type="text" placeholder="1990" /></label>
+            <label>Avant l'année <input data-filter="annee_max" type="text" placeholder="2005" /></label>
+            <label>Ville de naissance <input data-filter="ville_naissance" type="text" /></label>
+          </div>
+        </details>
+
+        <details class="section">
+          <summary>Contact</summary>
+          <div class="fields">
+            <label>Email <input data-filter="email" type="text" /></label>
+            <label>Téléphone <input data-filter="telephone" type="text" /></label>
+            <label>Pseudo <input data-filter="pseudo" type="text" /></label>
+          </div>
+        </details>
+
+        <details class="section">
+          <summary>Adresse</summary>
+          <div class="fields">
+            <label>Ville <input data-filter="ville" type="text" /></label>
+            <label>Code postal <input data-filter="code_postal" type="text" /></label>
+            <label>Département <input data-filter="departement" type="text" /></label>
+            <label>Région <input data-filter="region" type="text" /></label>
+            <label>Pays <input data-filter="pays" type="text" /></label>
+            <label>Nationalité <input data-filter="nationalite" type="text" /></label>
+          </div>
+        </details>
+
+        <details class="section span-2">
+          <summary>Informations complémentaires</summary>
+          <div class="fields">
+            <label>Profession <input data-filter="profession" type="text" /></label>
+            <label>Entreprise <input data-filter="entreprise" type="text" /></label>
+            <label>Fonction <input data-filter="fonction" type="text" /></label>
+          </div>
+        </details>
+      </div>
+
+      <div id="results-wrapper">
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>Nom</th><th>Prénom</th><th>Naissance</th><th>Ville</th>
+              <th>Email</th><th>Téléphone</th><th>Profession</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+        <p id="empty-state" class="empty-state">Aucun résultat. Lance une recherche ci-dessus.</p>
+      </div>
+
+      <div id="pagination" class="pagination"></div>
+    </div>
+  </main>
+
+  <!-- ===================== ONGLET ADMINISTRATION ===================== -->
+  <main id="tab-admin" class="tab-content hidden">
+    <div class="container">
+      <header>
+        <h1>Administration</h1>
+        <p class="subtitle">Import, gestion des personnes et de l'index de recherche.</p>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Personnes importées</div>
+          <div class="stat-value" id="stat-total">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Imports effectués</div>
+          <div class="stat-value" id="stat-imports">—</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Importer une base de données</h2>
+        <p class="hint">Formats acceptés : CSV, Excel (.xlsx/.xls), JSON.</p>
+        <input type="file" id="import-file" accept=".csv,.xlsx,.xls,.json" />
+      </div>
+
+      <div class="panel row">
+        <div>
+          <h2>Index de recherche</h2>
+          <p class="hint">Reconstruit l'index à partir de la base de données.</p>
+        </div>
+        <button id="btn-reindex">Reconstruire l'index</button>
+      </div>
+
+      <div class="panel row">
+        <div>
+          <h2>Ajouter une personne</h2>
+          <p class="hint">Saisie manuelle d'une fiche.</p>
+        </div>
+        <button id="btn-add" class="secondary">Ajouter</button>
+      </div>
+
+      <p id="admin-status" class="hint"></p>
+    </div>
+  </main>
+
+  <!-- ===================== MODALE AJOUT / MODIFICATION ===================== -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 id="modal-title">Ajouter une personne</h2>
+      <div class="fields" id="modal-fields"></div>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="secondary">Annuler</button>
+        <button id="modal-save">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
